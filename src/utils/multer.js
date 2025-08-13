@@ -1,9 +1,15 @@
 import multer from "multer";
+import fs from "fs";
+import pathModule from "path";
 
 export const fileStorage = (path = "courses") =>
   multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, `public/uploads/${path}`);
+      const uploadPath = pathModule.join("public", "uploads", path);
+
+      // Create the folder if it doesn't exist
+      fs.mkdirSync(uploadPath, { recursive: true });
+      cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
       const ext = file.originalname.split(".")[1];
